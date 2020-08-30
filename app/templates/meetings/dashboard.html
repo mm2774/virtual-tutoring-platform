@@ -1,0 +1,103 @@
+{% extends "templates/meetings/main.html" %}
+{% block content %}
+<div class="row min-height">
+  <div class="col-sm-12">
+    <div class="row main_border">
+      <div class="col-sm-7">
+        <h3 class="appointmnet_list">Upcoming Meetings</h3>
+      </div>
+    </div>
+    <nav class="navbar navbar-expand-md navbar-light bg-steel ml-auto">
+      <div class="container">
+        <div class="navbar-brand ml-auto"></div>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarToggle"
+          aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-md-12">
+          <!--Student Table-->
+          <div id="student-display" class="tabcontent">
+            <h5>Student Meetings</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Course</th>
+                  <th scope="col">Tutor</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Review</th>
+                </tr>
+              </thead>
+              {% if student_meetings %}
+              <tbody>
+                {% for meeting in student_meetings %}
+                <tr>
+                  <th scope="row">{{meeting.course_object.subject}} {{meeting.course_object.number}}</th>
+                  <td>{{meeting.tutor.username}}</td>
+                  <td>{{meeting.meeting_datetime.date}}</td>
+                  <td>{{meeting.meeting_datetime.time}}</td>
+                  <td><a href="{% url 'review_meeting' meeting.id%}">Review</a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              {% else %}
+              <tbody>
+                <th scope="row">No upcoming meetings.</th>
+              </tbody>
+              {% endif %}
+            </table>
+          </div>
+
+        </div>
+        <div class="col-lg-6 col-md-12">
+          <!--Tutor Table-->
+          <div id="tutor-display" class="tabcontent">
+            <h5>Tutor Meetings</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Course</th>
+                  <th scope="col">Student</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Edit</th>
+                </tr>
+              </thead>
+              {% if tutor_meetings %}
+              <tbody>
+                {% for meeting in tutor_meetings %}
+                <tr>
+                  <th scope="row">{{meeting.course_object.subject}} {{meeting.course_object.number}}</th>
+                  {% if meeting.student %}
+                  <td>{{meeting.student.username}}</td>
+                  {% else %}
+                  <td>-</td>
+                  {% endif %}
+                  <td>{{meeting.meeting_datetime}}</td>
+                  {% if not meeting.student %}
+                  <td><a href="{% url 'delete_meeting' meeting.id%}">Remove</a></td>
+                  {% else %}
+                  <td>-</td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+              {% else %}
+              <tbody>
+                <th scope="row">No meetings scheduled.</th>
+              </tbody>
+              {% endif %}
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  
+  </div>
+</div>
+
+{% endblock content %}

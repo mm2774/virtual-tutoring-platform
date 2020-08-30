@@ -1,0 +1,124 @@
+{% extends "templates/meetings/main.html" %} 
+{% block content %}
+<section id="showcase-inner" class="showcase-search text-white py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <h2>Search Tutors for {{course.subject}} {{course.number}}</h2>
+      </div>
+      <div class="col-md-12 text-secondary mb-3">
+        <p class="purple_text">
+          Select a day to see available tutors.
+        </p>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-12">
+        <form action="{% url 'course_meetings' course.id  %}">
+          <div class="form-row">
+            <div class="col-md-9 mb-3">
+              <label class="sr-only">Dates</label>
+              <input
+                type="date"
+                name="dates"
+                class="form-control"
+                value="{{ values.dates }}"
+                min="{{ min_date }}"
+                max="{{ max_date }}"
+                placeholder="{{ min_date }}"
+              />
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary btn-block" type="submit">
+                Search Date
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="tutors" class="py-4">
+  <div class="container">
+    <div class="row">
+      {% if tutors %} 
+      {% for tutor in tutors %}
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card listing-preview">
+          <div class="card-body border-light pl-0 pr-0 pt-0 pb-0">
+            <div class="row pt-3">
+              <div class="col-6">
+                <img class="rounded-circle account-img pl-3 pt-3" src="{{ tutor.profile.image.url }}" alt="profile">
+              </div>
+              <div class="col-6">
+                <h4 class="text-dark">
+                  {{ tutor.first_name }}
+                </h4>
+                <p>{{ tutor.profile.college_name }}</p>
+                <p>Class of {{ tutor.profile.grad_year }}</p>
+
+                <p><strong>{{ tutor.rating_value }}</strong> <i class="purple_text">/ 5.0</i></p>
+                <p class="purple_text">{{ tutor.rating_count }} reviews</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 pl-4">
+                <h6>Time Availability</h6>
+              </div>
+            </div>
+            <div class="row pl-3 pr-3">
+              {% if tutor.meetings %}
+              {% for meeting in tutor.meetings %}          
+              <div class="col-4 pl-1 pr-1 pb-1">
+                  <a
+                    class="btn btn-outline-dark btn-sm btn-block"
+                    href="{% url 'schedule_meeting' meeting.id%}" 
+                    role="button"
+                  >
+                    <small>{{ meeting.meeting_datetime.time }}</small>
+                  </a>
+              </div>  
+              {% endfor %}
+              {% else %}
+                <div class="col-md-12">
+                  <p>No Meetings Available</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>  
+      </div>
+      {% endfor %} 
+      {% else %}
+      <div class="col-md-12 pl-3">
+        <i>No Tutors Available... Select another date.</i>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+  {% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+  {% endif %}
+
+{% endblock content %}

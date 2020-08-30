@@ -1,0 +1,76 @@
+{% extends "templates/meetings/main.html" %} 
+{% block content %}
+<section id="showcase-inner" class="showcase-search text-white py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <h2>Browse Courses</h2>
+      </div>
+      <div class="col-md-12 text-secondary mb-3">
+        {% if user.is_authenticated%}
+        <p class="purple_text">
+          Select a course you need help with.
+        </p>
+        {% else %}
+        <p class="purple_text">
+          Sign up to look up tutors for your course!
+        </p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-12">
+        <form action="{% url 'search' %}">
+          <div class="form-row">
+            <div class="col-md-9 mb-3">
+              <label class="sr-only">Course</label>
+              <input
+                type="text"
+                name="keywords"
+                class="form-control"
+                placeholder="Course (CS 1110, MATH 1920, ...)"
+                value="{{ values.keywords }}"
+              />
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary btn-block" type="submit">
+                Search Course
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="courses" class="py-4">
+  <div class="container">
+    <div class="row">
+      {% if courses %} 
+      {% for course in courses %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+          <div class="card-body border-light pl-0 pr-0 pt-0 pb-0">
+            <a
+              class="btn btn-outline-dark btn-block"
+              href="{% url 'course_meetings' course.id%}"
+            >
+              <h4 class="text-dark">
+                {{ course.subject }} {{ course.number }}
+              </h4>
+              <small>{{ course.name }}</small>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %} 
+      {% else %}
+      <div class="col-md-12">
+        <p>No Courses Available</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

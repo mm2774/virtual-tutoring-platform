@@ -1,0 +1,33 @@
+{% extends "templates/meetings/main.html" %}
+{% block content %}
+<div class="content-section">
+  <form method="POST">
+    {% csrf_token %}
+    <div class="container">
+      <div class="col-md-12 mb-3">
+        <h2>Delete Meeting</h2>
+      </div>
+      <div class="col-md-12 text-secondary mb-3">
+        <p class="purple_text">
+          Scheduled at: {{meeting.meeting_datetime}}
+        </p>
+      </div>
+      {%if not meeting.student%}
+      <button class="btn btn-primary col-md-12" type="submit">Delete Meeting</button>
+      {% elif user == meeting.student %}
+      <div class="col-md-12 text-secondary mb-3">
+        <p class="purple_text">
+          Students cannot rearrange the schedule.
+        </p>
+      </div>
+      {%else%}
+      <div class="col-md-12 text-secondary mb-3">
+        <p class="purple_text">
+          This schedule is already arranged with the student.
+        </p>
+      </div>
+      {%endif%}
+    </div>
+  </form>
+</div>
+{% endblock content %}

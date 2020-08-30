@@ -1,0 +1,23 @@
+{% extends "templates/meetings/main.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content-section">
+  <form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      {% if can_review == True %}
+      <legend class="border-bottom mb-4">
+        Review your meeting
+      </legend>
+      {{ form | crispy }}
+      <button class="btn btn-primary" type="submit">Submit Review</button>
+      {% else %}
+      <legend class="border-bottom mb-4">
+        Review Unavailable
+      </legend>
+      <p>The review feature is disabled for this course either because the course is not complete yet or there already is a submitted review.</p>
+      {% endif %}
+    </fieldset>
+  </form>
+</div>
+{% endblock content %}

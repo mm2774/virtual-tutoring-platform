@@ -1,0 +1,16 @@
+{% extends "templates/meetings/main.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Tell us Your Availability for {{course.subject}} {{course.number}}
+                ({{course.name}})</legend>
+            {{ form|crispy }}
+            <p><i>Only tutor courses you have taken and received at least A- on.</i></p>
+            <button class="btn btn-primary" type="submit">Publish Meeting</button>
+        </fieldset>
+    </form>
+</div>
+{% endblock content %}
